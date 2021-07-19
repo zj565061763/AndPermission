@@ -1,12 +1,20 @@
-apply plugin: rootProject.ext.plugins.library
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+}
+
+def libGroupId = "com.sd.lib.android"
+def libArtifactId = "AndPermission"
+def libVersionCode = 20210719
+def libVersionName = "2.0.3-v01"
 
 android {
-    compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
-
+    compileSdkVersion 30
     defaultConfig {
-        minSdkVersion rootProject.ext.android.minSdkVersion
-        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        minSdkVersion 14
+        targetSdkVersion 30
+        versionCode libVersionCode
+        versionName libVersionName
     }
 
     resourcePrefix 'permission'
@@ -14,4 +22,26 @@ android {
 
 dependencies {
     api rootProject.ext.dependencies.fragment
+}
+
+task generateSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = libGroupId
+                artifactId = libArtifactId
+                version = libVersionName
+
+                // 上传源码
+                artifact generateSourcesJar
+            }
+        }
+    }
 }

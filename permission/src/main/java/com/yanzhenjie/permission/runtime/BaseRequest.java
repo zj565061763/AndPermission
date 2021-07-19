@@ -45,6 +45,7 @@ abstract class BaseRequest implements PermissionRequest {
     };
     private Action<List<String>> mGranted;
     private Action<List<String>> mDenied;
+    private PermissionChecker mPermissionChecker;
 
     BaseRequest(Source source) {
         this.mSource = source;
@@ -65,6 +66,12 @@ abstract class BaseRequest implements PermissionRequest {
     @Override
     public PermissionRequest onDenied(@NonNull Action<List<String>> denied) {
         this.mDenied = denied;
+        return this;
+    }
+
+    @Override
+    public final PermissionRequest checker(@NonNull PermissionChecker checker) {
+        this.mPermissionChecker = checker;
         return this;
     }
 
@@ -91,6 +98,10 @@ abstract class BaseRequest implements PermissionRequest {
         if (mDenied != null) {
             mDenied.onAction(deniedList);
         }
+    }
+
+    PermissionChecker getPermissionChecker() {
+        return mPermissionChecker;
     }
 
     /**

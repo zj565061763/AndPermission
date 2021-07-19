@@ -59,13 +59,19 @@ class LRequest extends BaseRequest {
     }
 
     @Override
+    PermissionChecker getPermissionChecker() {
+        final PermissionChecker superChecker = super.getPermissionChecker();
+        return superChecker != null ? superChecker : STRICT_CHECKER;
+    }
+
+    @Override
     public void start() {
         mPermissions = filterPermissions(mPermissions);
 
         new TaskExecutor<List<String>>(mSource.getContext()) {
             @Override
             protected List<String> doInBackground(Void... voids) {
-                return getDeniedPermissions(STRICT_CHECKER, mSource, mPermissions);
+                return getDeniedPermissions(getPermissionChecker(), mSource, mPermissions);
             }
 
             @Override

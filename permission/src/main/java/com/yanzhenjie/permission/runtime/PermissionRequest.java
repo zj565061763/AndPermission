@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.Rationale;
+import com.yanzhenjie.permission.checker.PermissionChecker;
 
 import java.util.List;
 
@@ -54,6 +55,11 @@ public interface PermissionRequest {
      * Action to be taken when all permissions are denied.
      */
     PermissionRequest onDenied(@NonNull Action<List<String>> denied);
+
+    /**
+     * Set {@link PermissionChecker}.
+     */
+    PermissionRequest checker(@NonNull PermissionChecker checker);
 
     /**
      * Request permission.

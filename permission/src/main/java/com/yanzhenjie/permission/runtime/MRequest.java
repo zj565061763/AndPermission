@@ -66,6 +66,12 @@ class MRequest extends BaseRequest implements RequestExecutor, BridgeRequest.Cal
     }
 
     @Override
+    PermissionChecker getPermissionChecker() {
+        final PermissionChecker superChecker = super.getPermissionChecker();
+        return superChecker != null ? superChecker : DOUBLE_CHECKER;
+    }
+
+    @Override
     public void start() {
         mPermissions = filterPermissions(mPermissions);
 
@@ -101,7 +107,7 @@ class MRequest extends BaseRequest implements RequestExecutor, BridgeRequest.Cal
         new TaskExecutor<List<String>>(mSource.getContext()) {
             @Override
             protected List<String> doInBackground(Void... voids) {
-                return getDeniedPermissions(DOUBLE_CHECKER, mSource, mPermissions);
+                return getDeniedPermissions(getPermissionChecker(), mSource, mPermissions);
             }
 
             @Override
